@@ -1,4 +1,4 @@
-import Axios from 'axios';
+import axios from 'axios';
 import Crypto from "crypto";
 
 export class Translator {
@@ -63,7 +63,7 @@ export class Translator {
             'sec-fetch-site': 'same-origin',
             'Timestamp': time
         }
-        const result: string = (await Axios.post(
+        const result: string = (await axios.post(
             'https://papago.naver.com/apis/n2mt/translate',
             data,
             { headers: headers }

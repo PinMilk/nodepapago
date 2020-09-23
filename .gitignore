@@ -1,2 +1,3 @@
 *.js
 !crypto.js
+.npmignore
