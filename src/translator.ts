@@ -24,7 +24,7 @@ import Crypto from "crypto";
 export class Translator {
 
     constructor() { }
-
+    
     private genUUID(time: number): string {
         let tower: number = time;
         const base: string = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
@@ -41,7 +41,12 @@ export class Translator {
         for (let property in formObj) result.push(`${property}=${formObj[property]}`);
         return result.join('&');
     }
-
+    /**
+     * 
+     * @param source original language code
+     * @param target target language code
+     * @param text text to be translated
+     */
     public async translate(source: string = 'ko', target: string = 'en', text: string): Promise<string> {
         const time: number = Date.now();
         const uuid: string = this.genUUID(time);
@@ -86,7 +91,12 @@ export class Translator {
 
         return result;
     }
-
+    /**
+     * 
+     * @param source original language code
+     * @param target target language code
+     * @param content string array to be translated
+     */
     public async multiTranslate(source: string, target: string, content: string[]): Promise<string[]> {
         let result: string[] = [];
 
