@@ -1,26 +1,6 @@
 import Axios from 'axios';
 import Crypto from "crypto";
 
-/**
- * Translate text to target language from source language.
- * 
- * @param {String} source - Original language code(text)
- * @param {String} target - Target language code(result)
- * @param {String} text - A text to be translated
- * 
- * @returns {String} Translated result
- * 
- * @param {String} source - Original language code(text)
- * @param {String} target - Target language code(result)
- * @param {Array} content - The array includes texts to be translated.
- * 
- * @returns {Array} Translated result array
- * 
- * @example
- * (async () => console.log(await new Translator().translate('en', 'ko', 'Hi.')))();
- * (async () => console.log(await new Translator().multiTranslate('en', 'ko', ['apple', 'banana', 'orange', 'computer', 'laptop', 'cellphone', 'school', 'promise'])))();
- */
-
 export class Translator {
 
     constructor() { }
