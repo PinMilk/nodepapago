@@ -51,5 +51,3 @@ new Translator().multiTranslate('en', 'ko', ['You\'re fucking weak.', 'Holy...',
 ```
 ## License
 It is following MIT License.
-## References
-- genUUID - 2020DevelopingKakaotalkBot([papago-kakao-bot](https://github.com/2020DevelopingKakaotalkBot/papago-kakao-bot))

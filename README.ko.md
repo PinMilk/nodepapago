@@ -50,6 +50,4 @@ new Translator().multiTranslate('en', 'ko', ['You\'re fucking weak.', 'Holy...',
 ```
 
 ## 라이선스
-nodepapago는 MIT 라이선스를 따릅니다..
-## References
-- genUUID - 2020DevelopingKakaotalkBot([papago-kakao-bot](https://github.com/2020DevelopingKakaotalkBot/papago-kakao-bot))
+nodepapago는 MIT 라이선스를 따릅니다.
