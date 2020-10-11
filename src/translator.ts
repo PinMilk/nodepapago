@@ -119,6 +119,10 @@ export class Translator {
 
         return result;
     }
+    /**
+     * 
+     * @param text Text to be detected language
+     */
     public async detect(text: string): Promise<string> {
         const time: number = Date.now();
         const uuid: string = this.genUUID(time);
