@@ -48,6 +48,26 @@ new Translator().multiTranslate('en', 'ko', ['You\'re fucking weak.', 'Holy...',
     .then(res => console.log(res))
     .catch(e => console.log(e));
 ```
-
+## 언어 코드
+| 코드 | 언어 |
+|----|----|
+| `ko` | 한국어 |
+| `en` | 영어 |
+| `ja` | 일본어 |
+| `zh-cn` | 중국어(간체) |
+| `zh-tw` | 중국어(번체) |
+| `hi` | 힌디어 |
+| `es` | 에스파냐어 |
+| `fr` | 프랑스어 |
+| `de` | 독일어 |
+| `pt` | 포르투갈어 |
+| `vi` | 베트남어 |
+| `id` | 인도네시아어 |
+| `fa` | 페르시아어 |
+| `ar` | 아랍어 |
+| `mm` | 미얀마어 |
+| `th` | 태국어 |
+| `ru` | 러시아어 |
+| `it` | 이탈리아어 |
 ## 라이선스
 nodepapago는 MIT 라이선스를 따릅니다.

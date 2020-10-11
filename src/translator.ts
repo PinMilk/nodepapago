@@ -1,10 +1,14 @@
-import axios from 'axios';
+import Axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import Crypto from "crypto";
 
 export class Translator {
 
     constructor() { }
-    
+    /**
+     * 
+     * @param time UNIX time(milliseconds)
+     */
     private genUUID(time: number): string {
         let tower: number = time;
         const base: string = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
@@ -15,11 +19,17 @@ export class Translator {
         });
         return uuid;
     }
-
+    /**
+     * 
+     * @param formObj Object to be converted to form data
+     */
     private toFormData(formObj: any): string {
         let result: string[] = [];
         for (let property in formObj) result.push(`${property}=${formObj[property]}`);
         return result.join('&');
+    }
+    private async request(url: string, data: any, config: AxiosRequestConfig) {
+        return await (await Axios.post(url, data, config)).data;
     }
     /**
      * 
@@ -27,9 +37,10 @@ export class Translator {
      * @param target target language code
      * @param text text to be translated
      */
-    public async translate(source: string = 'ko', target: string = 'en', text: string): Promise<string> {
+    public async translate(source: string = 'ko', target: string = 'en', text: string, verbose = false): Promise<any> {
         const time: number = Date.now();
         const uuid: string = this.genUUID(time);
+        const url: string = 'https://papago.naver.com/apis/n2mt/translate';
 
         const data: string = this.toFormData({
             'deviceId': uuid,
@@ -45,7 +56,7 @@ export class Translator {
         });
 
         const hash: Crypto.Hmac = Crypto.createHmac('md5', 'v1.5.1_4dfe1d83c2')
-            .update(`${uuid}\nhttps://papago.naver.com/apis/n2mt/translate\n${time}`);
+            .update(`${uuid}\n${url}\n${time}`);
 
         const headers: any = {
             'Accept': 'application/json',
@@ -62,13 +73,13 @@ export class Translator {
             'sec-fetch-mode': 'cors',
             'sec-fetch-site': 'same-origin',
             'Timestamp': time
-        }
-        const result: string = (await axios.post(
-            'https://papago.naver.com/apis/n2mt/translate',
+        };
+        const document: any = await this.request(
+            url,
             data,
             { headers: headers }
-        )).data.translatedText;
-
+        );
+        const result: any = (verbose ? document : document.translatedText);
         return result;
     }
     /**
@@ -76,11 +87,12 @@ export class Translator {
      * @param source original language code
      * @param target target language code
      * @param content string array to be translated
+     * @param verbose if it is true, returns raw json
      */
-    public async multiTranslate(source: string, target: string, content: string[]): Promise<string[]> {
+    public async multiTranslate(source: string, target: string, content: string[], verbose = false): Promise<string[]> {
         let result: string[] = [];
 
-        const promises = content.map(async (element, index) => await this.translate(source, target, element)
+        const promises = content.map(async (element, index) => await this.translate(source, target, element, verbose)
             .then(res => result[index] = res)
             .catch(error => console.log(error)));
 

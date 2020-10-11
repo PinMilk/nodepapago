@@ -49,5 +49,26 @@ new Translator().multiTranslate('en', 'ko', ['You\'re fucking weak.', 'Holy...',
     .then(res => console.log(res))
     .catch(e => console.log(e));
 ```
+## Language Code
+| Code | Language |
+|----|----|
+| `ko` | Korean |
+| `en` | English |
+| `ja` | Japanese |
+| `zh-cn` | Chinese(Simplified) |
+| `zh-tw` | Chinese(Traditional) |
+| `hi` | Hindi |
+| `es` | Spanish |
+| `fr` | French |
+| `de` | German |
+| `pt` | Portuguese |
+| `vi` | Vietnamese |
+| `id` | Indonesian |
+| `fa` | Persian |
+| `ar` | Arabic |
+| `mm` | Myanmar |
+| `th` | Thai |
+| `ru` | Russian |
+| `it` | Italian |
 ## License
 It is following MIT License.
