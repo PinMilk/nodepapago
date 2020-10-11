@@ -23,6 +23,11 @@ new Translator().translate('en', 'ko', 'You\'re fucking weak.')
     .then(res => console.log(res))
     .catch(e => console.log(e));
 // Expected output: 넌 약해빠졌어
+
+new Translator().translate('detect', 'ko', 'You\'re fucking weak.')
+    .then(res => console.log(res))
+    .catch(e => console.log(e));
+// Expected output: 넌 약해빠졌어(자동 감지)
 ```
 
 ### Multi Translate
@@ -37,7 +42,6 @@ new Translator().multiTranslate('en', 'ko', ['You\'re fucking weak.', 'Holy...',
 
 ### CommonJS
 ```javascript
-"use strict";
 const Translator = require("nodepapago").default;
 
 new Translator().translate('en', 'ko', 'You\'re fucking weak.')
@@ -69,5 +73,6 @@ new Translator().multiTranslate('en', 'ko', ['You\'re fucking weak.', 'Holy...',
 | `th` | 태국어 |
 | `ru` | 러시아어 |
 | `it` | 이탈리아어 |
+| `detect` | 자동 감지 |
 ## 라이선스
 nodepapago는 MIT 라이선스를 따릅니다.

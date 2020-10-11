@@ -24,6 +24,11 @@ new Translator().translate('en', 'ko', 'You\'re fucking weak.')
     .then(res => console.log(res))
     .catch(e => console.log(e));
 // Expected output: 넌 약해빠졌어
+
+new Translator().translate('detect', 'ko', 'You\'re fucking weak.')
+    .then(res => console.log(res))
+    .catch(e => console.log(e));
+// Expected output: 넌 약해빠졌어(Auto detect)
 ```
 
 ### Multi
@@ -70,5 +75,6 @@ new Translator().multiTranslate('en', 'ko', ['You\'re fucking weak.', 'Holy...',
 | `th` | Thai |
 | `ru` | Russian |
 | `it` | Italian |
+| `detect` | Auto detect |
 ## License
 It is following MIT License.
