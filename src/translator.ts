@@ -1,9 +1,7 @@
-import Axios from 'axios';
-import axios, { AxiosRequestConfig } from 'axios';
+import Axios, { AxiosRequestConfig } from 'axios';
 import Crypto from "crypto";
 
 export class Translator {
-
     constructor() { }
     /**
      * 
