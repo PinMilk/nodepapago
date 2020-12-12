@@ -1,7 +1,7 @@
 import Axios, { AxiosRequestConfig } from 'axios';
 import Crypto from "crypto";
 
-export class Translator {
+class Translator {
     constructor() { }
     /**
      * 
@@ -54,37 +54,34 @@ export class Translator {
      * @param source original language code
      * @param target target language code
      * @param text text to be translated
-     * @param verbose if it is true, returns raw json
+     * @param config Config for translation
      */
-    public async translate(source: string = 'detect', target: string = 'en', text: string, verbose = false): Promise<any> {
+    public async translate(source = 'detect', target: string, text: string, config: TranslatorConfig = {
+        honorfic: false,
+        verbose: false
+    }): Promise<string | TranslateResult> {
         const time: number = Date.now();
         const uuid: string = this.genUUID(time);
         const url: string = 'https://papago.naver.com/apis/n2mt/translate';
         const hash: string = this.getHash('v1.5.1_4dfe1d83c2', `${uuid}\n${url}\n${time}`);
 
         if (source === 'detect') source = await this.detect(text);
-        const headers: any = {
-            'Accept': 'application/json',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Accept-Language': 'en',
-            'Authorization': `PPG ${uuid}:${hash}`,
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'Device-Type': 'pc',
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4)\
-                     AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36',
-            'Origin': 'https://papago.naver.com',
-            'Referer': 'https://papago.naver.com/',
-            'sec-fetch-dest': 'empty',
-            'sec-fetch-mode': 'cors',
-            'sec-fetch-site': 'same-origin',
-            'Timestamp': time
-        };
+        const requestConfig: AxiosRequestConfig = {
+            headers: {
+                'Authorization': `PPG ${uuid}:${hash}`,
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36',
+                'Origin': 'https://papago.naver.com',
+                'Referer': 'https://papago.naver.com/',
+                'Timestamp': time
+            }
+        }
         const data: string = this.toFormData({
             'deviceId': uuid,
             'locale': 'en',
             'dict': true,
             'dictDisplay': 30,
-            'honorific': false,
+            'honorific': config.honorfic,
             'instant': true,
             'paging': false,
             'source': source,
@@ -94,9 +91,9 @@ export class Translator {
         const document: any = await this.request(
             url,
             data,
-            { headers: headers }
+            requestConfig
         );
-        const result: any = (verbose ? document : document.translatedText);
+        const result: any = (config.verbose ? document : document.translatedText);
         return result;
     }
     /**
@@ -104,12 +101,15 @@ export class Translator {
      * @param source original language code
      * @param target target language code
      * @param content string array to be translated
-     * @param verbose if it is true, returns raw json array
+     * @param config Config for translation
      */
-    public async multiTranslate(source: string, target: string, content: string[], verbose = false): Promise<any[]> {
-        let result: string[] = [];
+    public async multiTranslate(source: string = 'detect', target: string, content: string[], config: TranslatorConfig = {
+        honorfic: false,
+        verbose: false
+    }): Promise<string[] | TranslateResult[]> {
+        let result: string[] | TranslateResult[] = [];
 
-        const promises = content.map(async (element, index) => await this.translate(source, target, element, verbose)
+        const promises = content.map(async (element, index) => await this.translate(source, target, element, config)
             .then(res => result[index] = res)
             .catch(error => console.log(error)));
 
@@ -127,31 +127,55 @@ export class Translator {
         const url: string = 'https://papago.naver.com/apis/langs/dect';
         const hash: string = this.getHash('v1.5.1_4dfe1d83c2', `${uuid}\n${url}\n${time}`);
 
-        const headers: any = {
-            'Accept': 'application/json',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Accept-Language': 'en',
-            'Authorization': `PPG ${uuid}:${hash}`,
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'Device-Type': 'pc',
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4)\
-                     AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36',
-            'Origin': 'https://papago.naver.com',
-            'Referer': 'https://papago.naver.com/',
-            'sec-fetch-dest': 'empty',
-            'sec-fetch-mode': 'cors',
-            'sec-fetch-site': 'same-origin',
-            'Timestamp': time
-        };
+        const config: AxiosRequestConfig = {
+            headers: {
+                'Authorization': `PPG ${uuid}:${hash}`,
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36',
+                'Origin': 'https://papago.naver.com',
+                'Referer': 'https://papago.naver.com/',
+                'Timestamp': time
+            }
+        }
         const data: string = this.toFormData({
             'query': text
         });
         const document: any = await this.request(
             url,
             data,
-            { headers: headers }
+            config
         );
         const result: string = document.langCode;
         return result;
     }
+}
+
+interface TranslatorConfig {
+    // If it is true, returns with raw json
+    verbose?: boolean;
+    // Respectability(Widely used in East Asian languages)
+    honorfic?: boolean;
+}
+
+interface TranslateResult {
+    // Origin language code
+    srcLangType: string;
+    // Targe language code
+    tarLangType: string;
+    // Translated result
+    translatedText: string;
+    engineType: string;
+    pivot: string;
+    dict: string;
+    tarDict: string;
+    tlitSrc: string;
+    tlit: string;
+    delay: string;
+    delaySmt: string;
+}
+
+export {
+    Translator,
+    TranslatorConfig,
+    TranslateResult
 }

@@ -1,10 +1,13 @@
 import { Translator } from "./";
 
-new Translator().translate('detect', 'ko', 'You\'re fucking weak.')
+new Translator().translate('detect', 'ko', 'So far, so good!')
     .then(res => console.log(res))
     .catch(e => console.log(e));
 
-new Translator().multiTranslate('en', 'ko', ['You\'re fucking weak.', 'Holy...', 'Jesus Christ'])
+new Translator().multiTranslate('en', 'ko', ['Morning, sir', 'Morning, ma\'am'], {
+    honorfic: true,
+    verbose: false
+})
     .then(res => console.log(res))
     .catch(e => console.log(e));
 

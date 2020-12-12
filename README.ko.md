@@ -15,43 +15,51 @@ npm install nodepapago
 ## npm
 `https://www.npmjs.com/package/nodepapago`
 ## 예시
-### Translate
 ```typescript
-import Translator from "nodepapago";
+import { Translator } from "nodepapago";
 
-new Translator().translate('en', 'ko', 'You\'re fucking weak.')
+new Translator().translate('detect', 'ko', 'So far, so good!')
     .then(res => console.log(res))
     .catch(e => console.log(e));
-// Expected output: 넌 약해빠졌어
+// Expected output: '지금까지, 잘했어!'
 
-new Translator().translate('detect', 'ko', 'You\'re fucking weak.')
+new Translator().multiTranslate('en', 'ko', ['Morning, sir', 'Morning, ma\'am'], {
+    honorfic: true,
+    verbose: false
+})
     .then(res => console.log(res))
     .catch(e => console.log(e));
-// Expected output: 넌 약해빠졌어(자동 감지)
+// Expected output: ['안녕하세요, 손님.', '안녕하세요, 부인']
+
+new Translator().detect('So far, so bueno!')
+    .then(res => console.log(res))
+    .catch(e => console.log(e));
+// Expected output: 'it'
 ```
-
-### Multi Translate
-```typescript
-import Translator from "nodepapago";
-
-new Translator().multiTranslate('en', 'ko', ['You\'re fucking weak.', 'Holy...', 'Jesus Christ'])
-    .then(res => console.log(res))
-    .catch(e => console.log(e));
-// Expected output: ['넌 약해빠졌어', '이런...', '놀래라.']
-```
-
-### CommonJS
-```javascript
-const Translator = require("nodepapago").default;
-
-new Translator().translate('en', 'ko', 'You\'re fucking weak.')
-    .then(res => console.log(res))
-    .catch(e => console.log(e));
-
-new Translator().multiTranslate('en', 'ko', ['You\'re fucking weak.', 'Holy...', 'Jesus Christ'])
-    .then(res => console.log(res))
-    .catch(e => console.log(e));
-```
+## Parameter
+### Just translation
+| Parameter | Detail | Type | Required | default |
+| ---- | ---- | ---- | ---- | ---- |
+| `source` | 원본 텍스트 언어 코드 | `string` | N | `detect` |
+| `target` | 번역할 텍스트 언어 코드 | `string` | Y | `-` |
+| `text` | 번역할 텍스트 | `string` | Y | `-` |
+| `config` | 번역 config | `TranslatorConfig` | N | [Config table](#config-table) |
+### Multi translation
+| Parameter | Detail | Type | Required | default |
+| ---- | ---- | ---- | ---- | ---- |
+| `source` | 원본 텍스트 언어 코드 | `string` | N | `detect` |
+| `target` | 번역할 텍스트 언어 코드 | `string` | Y | `-` |
+| `contents` | 번역할 텍스트들의 배열 | `Array<string>` | Y | `-` |
+| `config` | 번역 config | `TranslatorConfig` | N | [Config table](#config-table) |
+### Language detect
+| Parameter | Detail | Type | Required |
+| ---- | ---- | ---- | ---- | ---- |
+| `text` | 언어를 감지할 문장 | `string` | Y |
+### Config table
+| key | Detail | Type | Required | default |
+| ---- | ---- | ---- | ---- | ---- |
+| `honorfic` | 존댓말 | `boolean` | N | `false` |
+| `verbose` | 결과를 json으로 내보낼 지 결정합니다. | `boolean` | N | `false` |
 ## 언어 코드
 | 코드 | 언어 |
 |----|----|

@@ -1,4 +1,4 @@
-# nodepapago - Unofficial papago translator.
+# nodePapago - Unofficial papago translator.
 [![TypeScript](https://img.shields.io/badge/Built%20with-Typescript-informational?logo=typescript)](https://www.typescriptlang.org/)
 [![Passed](https://img.shields.io/badge/Build-Passed-success)](#)
 [![License](https://img.shields.io/github/license/pinmilk/nodepapago)](#)
@@ -16,45 +16,52 @@ npm install nodepapago
 ## npm
 `https://www.npmjs.com/package/nodepapago`
 ## Example
-### General
 ```typescript
-import Translator from "nodepapago";
+import { Translator } from "nodepapago";
 
-new Translator().translate('en', 'ko', 'You\'re fucking weak.')
+new Translator().translate('detect', 'ko', 'So far, so good!')
     .then(res => console.log(res))
     .catch(e => console.log(e));
-// Expected output: 넌 약해빠졌어
+// Expected output: '지금까지, 잘했어!'
 
-new Translator().translate('detect', 'ko', 'You\'re fucking weak.')
+new Translator().multiTranslate('en', 'ko', ['Morning, sir', 'Morning, ma\'am'], {
+    honorfic: true,
+    verbose: false
+})
     .then(res => console.log(res))
     .catch(e => console.log(e));
-// Expected output: 넌 약해빠졌어(Auto detect)
+// Expected output: ['안녕하세요, 손님.', '안녕하세요, 부인']
+
+new Translator().detect('So far, so bueno!')
+    .then(res => console.log(res))
+    .catch(e => console.log(e));
+// Expected output: 'it'
 ```
-
-### Multi
-```typescript
-import Translator from "nodepapago";
-
-new Translator().multiTranslate('en', 'ko', ['You\'re fucking weak.', 'Holy...', 'Jesus Christ'])
-    .then(res => console.log(res))
-    .catch(e => console.log(e));
-// Expected output: ['넌 약해빠졌어', '이런...', '놀래라.']
-```
-
-### CommonJS
-```javascript
-"use strict";
-const Translator = require("nodepapago").default;
-
-new Translator().translate('en', 'ko', 'You\'re fucking weak.')
-    .then(res => console.log(res))
-    .catch(e => console.log(e));
-
-new Translator().multiTranslate('en', 'ko', ['You\'re fucking weak.', 'Holy...', 'Jesus Christ'])
-    .then(res => console.log(res))
-    .catch(e => console.log(e));
-```
-## Language Code
+## Parameter
+### Just translation
+| Parameter | Detail | Type | Required | default |
+| ---- | ---- | ---- | ---- | ---- |
+| `source` | Oringin language code | `string` | N | `detect` |
+| `target` | Target language code | `string` | Y | `-` |
+| `text` | Text to be translated | `string` | Y | `-` |
+| `config` | Translation config | `TranslatorConfig` | N | [Config table](#config-table) |
+### Multi translation
+| Parameter | Detail | Type | Required | default |
+| ---- | ---- | ---- | ---- | ---- |
+| `source` | Oringin language code | `string` | N | `detect` |
+| `target` | Target language code | `string` | Y | `-` |
+| `contents` | Text array to be translated | `Array<string>` | Y | `-` |
+| `config` | Translation config | `TranslatorConfig` | N | [Config table](#config-table) |
+### Language detect
+| Parameter | Detail | Type | Required |
+| ---- | ---- | ---- | ---- | ---- |
+| `text` | Text to be detected language | `string` | Y |
+### Config table
+| key | Detail | Type | Required | default |
+| ---- | ---- | ---- | ---- | ---- |
+| `honorfic` | Respectability(Widely used in East Asian languages) | `boolean` | N | `false` |
+| `verbose` | If it is true, returns with raw json | `boolean` | N | `false` |
+## Language code table
 | Code | Language |
 |----|----|
 | `ko` | Korean |
