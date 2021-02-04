@@ -83,5 +83,8 @@ new Translator().detect('So far, so bueno!')
 | `ru` | Russian |
 | `it` | Italian |
 | `detect` | Auto detect |
+## Release
+### 2.2.1
+`Changed hashing algorithm`
 ## License
 It is following MIT License.

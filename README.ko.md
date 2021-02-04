@@ -82,5 +82,8 @@ new Translator().detect('So far, so bueno!')
 | `ru` | 러시아어 |
 | `it` | 이탈리아어 |
 | `detect` | 자동 감지 |
+## 변경점
+### 2.2.1
+`해싱 알고리즘 변경`
 ## 라이선스
 nodepapago는 MIT 라이선스를 따릅니다.
