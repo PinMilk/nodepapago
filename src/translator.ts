@@ -63,14 +63,14 @@ class Translator {
         const time: number = Date.now();
         const uuid: string = this.genUUID(time);
         const url: string = 'https://papago.naver.com/apis/n2mt/translate';
-        const hash: string = this.getHash('v1.5.1_4dfe1d83c2', `${uuid}\n${url}\n${time}`);
+        const hash: string = this.getHash('v1.5.3_e6026dbabc', `${uuid}\n${url}\n${time}`);
 
         if (source === 'detect') source = await this.detect(text);
         const requestConfig: AxiosRequestConfig = {
             headers: {
                 'Authorization': `PPG ${uuid}:${hash}`,
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36',
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36',
                 'Origin': 'https://papago.naver.com',
                 'Referer': 'https://papago.naver.com/',
                 'Timestamp': time
@@ -125,13 +125,13 @@ class Translator {
         const time: number = Date.now();
         const uuid: string = this.genUUID(time);
         const url: string = 'https://papago.naver.com/apis/langs/dect';
-        const hash: string = this.getHash('v1.5.1_4dfe1d83c2', `${uuid}\n${url}\n${time}`);
+        const hash: string = this.getHash('v1.5.3_e6026dbabc', `${uuid}\n${url}\n${time}`);
 
         const config: AxiosRequestConfig = {
             headers: {
                 'Authorization': `PPG ${uuid}:${hash}`,
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36',
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36',
                 'Origin': 'https://papago.naver.com',
                 'Referer': 'https://papago.naver.com/',
                 'Timestamp': time
