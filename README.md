@@ -54,10 +54,10 @@ new Translator().detect('So far, so bueno!')
 | `config` | Translation config | `TranslatorConfig` | N | [Config table](#config-table) |
 ### Language detect
 | Parameter | Detail | Type | Required |
-| ---- | ---- | ---- | ---- | ---- |
+| ---- | ---- | ---- | ---- |
 | `text` | Text to be detected language | `string` | Y |
 ### Config table
-| key | Detail | Type | Required | default |
+| Key | Detail | Type | Required | Default |
 | ---- | ---- | ---- | ---- | ---- |
 | `honorfic` | Respectability(Widely used in East Asian languages) | `boolean` | N | `false` |
 | `verbose` | If it is true, returns with raw json | `boolean` | N | `false` |

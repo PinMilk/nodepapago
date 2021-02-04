@@ -36,29 +36,29 @@ new Translator().detect('So far, so bueno!')
     .catch(e => console.log(e));
 // Expected output: 'it'
 ```
-## Parameter
-### Just translation
-| Parameter | Detail | Type | Required | default |
+## 매개변수
+### 일반 번역
+| 매개변수 | 설명 | 타입 | 필수 | 기본 |
 | ---- | ---- | ---- | ---- | ---- |
 | `source` | 원본 텍스트 언어 코드 | `string` | N | `detect` |
 | `target` | 번역할 텍스트 언어 코드 | `string` | Y | `-` |
 | `text` | 번역할 텍스트 | `string` | Y | `-` |
 | `config` | 번역 config | `TranslatorConfig` | N | [Config table](#config-table) |
-### Multi translation
-| Parameter | Detail | Type | Required | default |
+### 다중 번역
+| 매개변수 | 설명 | 타입 | 필수 | 기본 |
 | ---- | ---- | ---- | ---- | ---- |
 | `source` | 원본 텍스트 언어 코드 | `string` | N | `detect` |
 | `target` | 번역할 텍스트 언어 코드 | `string` | Y | `-` |
 | `contents` | 번역할 텍스트들의 배열 | `Array<string>` | Y | `-` |
 | `config` | 번역 config | `TranslatorConfig` | N | [Config table](#config-table) |
-### Language detect
-| Parameter | Detail | Type | Required |
-| ---- | ---- | ---- | ---- | ---- |
+### 언어 감지
+| 매개변수 | 설명 | 타입 | 필수 |
+| ---- | ---- | ---- | ---- |
 | `text` | 언어를 감지할 문장 | `string` | Y |
-### Config table
-| key | Detail | Type | Required | default |
+### 설정표
+| 키 | 설명 | 타입 | 필수 | 기본 |
 | ---- | ---- | ---- | ---- | ---- |
-| `honorfic` | 존댓말 | `boolean` | N | `false` |
+| `honorfic` | 높임말 | `boolean` | N | `false` |
 | `verbose` | 결과를 json으로 내보낼 지 결정합니다. | `boolean` | N | `false` |
 ## 언어 코드
 | 코드 | 언어 |
