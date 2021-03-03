@@ -1,4 +1,4 @@
-import { Translator } from "./";
+import { Translator } from './';
 
 new Translator().translate('detect', 'ko', 'So far, so good!')
     .then(res => console.log(res))

@@ -1,10 +1,11 @@
 import Axios, { AxiosRequestConfig } from 'axios';
-import Crypto from "crypto";
+import Crypto from 'crypto';
 
 class Translator {
     constructor() { }
     /**
      * 
+     * Generating UUID
      * @param time UNIX time(milliseconds)
      * @private
      */
@@ -20,6 +21,7 @@ class Translator {
     }
     /**
      * 
+     * Change form data object to raw data
      * @param formObj Object to be converted to form data
      * @private
      */
@@ -30,6 +32,7 @@ class Translator {
     }
     /**
      * 
+     * Hashing with algorithm that is used by Papago
      * @param key hashing key
      * @param message message to be hashed
      * @private
