@@ -15,7 +15,7 @@ class Translator {
         const uuid: string = base.replace(/[xy]/g, e => {
             const chip: number = (time + 16 * Math.random()) % 16 | 0;
             tower = Math.floor(tower / 16);
-            return (e === 'x' ? chip : 3 & chip | 8).toString();
+            return (e === 'x' ? chip : 3 & chip | 8).toString(16);
         });
         return uuid;
     }
@@ -38,7 +38,8 @@ class Translator {
      * @private
      */
     private getHash(key: string, message: string): string {
-        const hash: Crypto.Hmac = Crypto.createHmac('md5', key)
+        const hash: Crypto.Hmac = Crypto
+            .createHmac('md5', key)
             .update(message);
         return hash.digest('base64');
     }
@@ -66,17 +67,16 @@ class Translator {
         const time: number = Date.now();
         const uuid: string = this.genUUID(time);
         const url: string = 'https://papago.naver.com/apis/n2mt/translate';
-        const hash: string = this.getHash('v1.5.3_e6026dbabc', `${uuid}\n${url}\n${time}`);
+        const hash: string = this.getHash('v1.5.6_97f6918302', `${uuid}\n${url}\n${time}`);
 
         if (source === 'detect') source = await this.detect(text);
+        const authorization: string = `PPG ${uuid}:${hash}`
         const requestConfig: AxiosRequestConfig = {
             headers: {
-                'Authorization': `PPG ${uuid}:${hash}`,
+                'Authorization': authorization,
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36',
-                'Origin': 'https://papago.naver.com',
-                'Referer': 'https://papago.naver.com/',
-                'Timestamp': time
+                'Timestamp': time,
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36'
             }
         }
         const data: string = this.toFormData({
@@ -85,11 +85,13 @@ class Translator {
             'dict': true,
             'dictDisplay': 30,
             'honorific': config.honorfic,
-            'instant': true,
+            'instant': false,
             'paging': false,
             'source': source,
             'target': target,
-            'text': text
+            'text': text,
+            'authroization': authorization,
+            'timestamp': time
         });
         const document: any = await this.request(
             url,
@@ -128,15 +130,13 @@ class Translator {
         const time: number = Date.now();
         const uuid: string = this.genUUID(time);
         const url: string = 'https://papago.naver.com/apis/langs/dect';
-        const hash: string = this.getHash('v1.5.3_e6026dbabc', `${uuid}\n${url}\n${time}`);
+        const hash: string = this.getHash('v1.5.6_97f6918302', `${uuid}\n${url}\n${time}`);
 
         const config: AxiosRequestConfig = {
             headers: {
                 'Authorization': `PPG ${uuid}:${hash}`,
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36',
-                'Origin': 'https://papago.naver.com',
-                'Referer': 'https://papago.naver.com/',
                 'Timestamp': time
             }
         }

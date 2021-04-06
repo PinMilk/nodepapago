@@ -1,6 +1,6 @@
 import { Translator } from './';
 
-new Translator().translate('detect', 'ko', 'So far, so good!')
+new Translator().translate('en', 'ko', 'So far, so good!')
     .then(res => console.log(res))
     .catch(e => console.log(e));
 
