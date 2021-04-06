@@ -86,5 +86,7 @@ new Translator().detect('So far, so bueno!')
 ## Release
 ### 2.2.1
 `Changed hashing algorithm`
+### 2.2.2
+`Changed hashing algorithm`
 ## License
 It is following MIT License.
