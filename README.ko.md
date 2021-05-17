@@ -75,7 +75,7 @@ Translator.detect('So far, so bueno!')
 ### 설정
 | 키 | 설명 | 타입 | 필수 | 기본값 |
 | ---- | ---- | ---- | ---- | ---- |
-| `parameter` | [매개변수 (리스트)]](#매개변수) | `TranslateParameter \| TranslateParameter[]` | Y | `-` |
+| `parameter` | [매개변수 (리스트)](#매개변수) | `TranslateParameter \| TranslateParameter[]` | Y | `-` |
 | `honorfic` | 높임말 | `boolean` | N | `false` |
 | `verbose` | 결과를 json으로 내보낼 지 결정합니다. | `boolean` | N | `false` |
 | `multi` | 다중 번역 | `boolean` | N | `false` |
