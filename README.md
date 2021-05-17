@@ -17,50 +17,75 @@ npm install nodepapago
 `https://www.npmjs.com/package/nodepapago`
 ## Example
 ```typescript
-import { Translator } from "nodepapago";
+import Translator from 'nodepapago';
 
-new Translator().translate('detect', 'ko', 'So far, so good!')
+new Translator({
+    parameter: {
+        source: 'en',
+        target: 'ko',
+        text: 'So far, so good!'
+    }
+}).translate()
     .then(res => console.log(res))
     .catch(e => console.log(e));
-// Expected output: '지금까지, 잘했어!'
-
-new Translator().multiTranslate('en', 'ko', ['Morning, sir', 'Morning, ma\'am'], {
-    honorfic: true,
-    verbose: false
-})
+// Expected output: '지금까지, 너무 좋아요!'
+new Translator({
+    parameter: [
+        {
+            source: 'en',
+            target: 'ko',
+            text: 'Morning, sir.'
+        },
+        {
+            source: 'en',
+            target: 'ko',
+            text: 'Morning, ma\'am.'
+        }
+    ],
+    honorific: true
+}).translate()
     .then(res => console.log(res))
     .catch(e => console.log(e));
-// Expected output: ['안녕하세요, 손님.', '안녕하세요, 부인']
-
-new Translator().detect('So far, so bueno!')
+// Expected output: [ '안녕하세요, 선생님.', '안녕하세요, 부인.' ]
+new Translator({
+    parameter: [
+        {
+            source: 'en',
+            target: 'ko',
+            text: 'Morning!'
+        },
+        {
+            source: 'en',
+            target: 'ko',
+            text: 'Morning, baby!'
+        }
+    ],
+    verbose: true
+}).translate()
+    .then(res => console.log(res))
+    .catch(e => console.log(e));
+// Expected output: sooooo long...
+Translator.detect('So far, so bueno!')
     .then(res => console.log(res))
     .catch(e => console.log(e));
 // Expected output: 'it'
 ```
-## Parameter
-### Just translation
-| Parameter | Detail | Type | Required | default |
+## Table
+### Config
+| Property | Detail | Type | Required | default |
 | ---- | ---- | ---- | ---- | ---- |
+| `parameter` | [Translate parameter (list)](#Parameter) | `TranslateParameter | TranslateParameter[]` | Y | `-` |
+| `honorfic` | Respectability(Widely used in East Asian languages) | `boolean` | N | `false` |
+| `verbose` | If it is true, returns with raw json | `boolean` | N | `false` |
+| `multi` | Multi translation | `boolean` | N | `false` |
+### Parameter
 | `source` | Oringin language code | `string` | N | `detect` |
 | `target` | Target language code | `string` | Y | `-` |
 | `text` | Text to be translated | `string` | Y | `-` |
-| `config` | Translation config | `TranslatorConfig` | N | [Config table](#config-table) |
-### Multi translation
-| Parameter | Detail | Type | Required | default |
-| ---- | ---- | ---- | ---- | ---- |
-| `source` | Oringin language code | `string` | N | `detect` |
-| `target` | Target language code | `string` | Y | `-` |
-| `contents` | Text array to be translated | `Array<string>` | Y | `-` |
-| `config` | Translation config | `TranslatorConfig` | N | [Config table](#config-table) |
 ### Language detect
 | Parameter | Detail | Type | Required |
 | ---- | ---- | ---- | ---- |
 | `text` | Text to be detected language | `string` | Y |
-### Config table
-| Key | Detail | Type | Required | Default |
-| ---- | ---- | ---- | ---- | ---- |
-| `honorfic` | Respectability(Widely used in East Asian languages) | `boolean` | N | `false` |
-| `verbose` | If it is true, returns with raw json | `boolean` | N | `false` |
 ## Language code table
 | Code | Language |
 |----|----|
@@ -88,5 +113,7 @@ new Translator().detect('So far, so bueno!')
 `Changed hashing algorithm`
 ### 2.2.4
 `Changed hashing algorithm`
+### 3.0.0
+`Changed all source`
 ## License
 It is following MIT License.
