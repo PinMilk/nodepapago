@@ -28,6 +28,7 @@ new Translator({
     .then(res => console.log(res))
     .catch(e => console.log(e));
 // Expected output: '지금까지, 너무 좋아요!'
+
 new Translator({
     parameter: [
         {
@@ -46,6 +47,7 @@ new Translator({
     .then(res => console.log(res))
     .catch(e => console.log(e));
 // Expected output: [ '안녕하세요, 선생님.', '안녕하세요, 부인.' ]
+
 new Translator({
     parameter: [
         {
@@ -64,6 +66,7 @@ new Translator({
     .then(res => console.log(res))
     .catch(e => console.log(e));
 // Expected output: sooooo long...
+
 Translator.detect('So far, so bueno!')
     .then(res => console.log(res))
     .catch(e => console.log(e));
