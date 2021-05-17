@@ -79,6 +79,8 @@ Translator.detect('So far, so bueno!')
 | `verbose` | If it is true, returns with raw json | `boolean` | N | `false` |
 | `multi` | Multi translation | `boolean` | N | `false` |
 ### Parameter
+| Property | Detail | Type | Required | default |
+| ---- | ---- | ---- | ---- | ---- |
 | `source` | Oringin language code | `string` | N | `detect` |
 | `target` | Target language code | `string` | Y | `-` |
 | `text` | Text to be translated | `string` | Y | `-` |
