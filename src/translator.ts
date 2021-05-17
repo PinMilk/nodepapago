@@ -2,7 +2,30 @@ import Axios, { AxiosRequestConfig } from 'axios';
 import Crypto from 'crypto';
 
 class Translator {
-    constructor() { }
+    private parameter: TranslateParameter = {
+        source: 'ko',
+        target: 'en',
+        text: '안녕'
+    };
+    private multiParam: TranslateParameter[] = [];
+    private config: TranslateConfig;
+    /**
+     * 
+     * @param config translate config
+     * @constructor
+     */
+    constructor(config: TranslateConfig) {
+        this.config = config;
+        if (config.verbose === void 0) this.config.verbose = false;
+        if (config.honorific === void 0) this.config.honorific = false;
+        if (config.multi === void 0) this.config.multi = false;
+        if (Array.isArray(config.parameter)) {
+            this.multiParam = config.parameter;
+            this.config.multi = true;
+        }
+        else this.parameter = config.parameter;
+        return this;
+    }
     /**
      * 
      * Generating UUID
@@ -55,21 +78,17 @@ class Translator {
     }
     /**
      * 
-     * @param source original language code
-     * @param target target language code
-     * @param text text to be translated
-     * @param config Config for translation
+     * @param config translate config
+     * @param parameter translate parameter
+     * @returns translate result
      */
-    public async translate(source = 'detect', target: string, text: string, config: TranslatorConfig = {
-        honorfic: false,
-        verbose: false
-    }): Promise<string | TranslateResult> {
+    private async makeTranslateReq(config: TranslateConfig, parameter: TranslateParameter): Promise<string | TranslateResult> {
         const time: number = Date.now();
         const uuid: string = this.genUUID(time);
         const url: string = 'https://papago.naver.com/apis/n2mt/translate';
         const hash: string = this.getHash('v1.5.6_97f6918302', `${uuid}\n${url}\n${time}`);
 
-        if (source === 'detect') source = await this.detect(text);
+        if (parameter.source === void 0 || parameter.source === 'detect') parameter.source = await Translator.detect(parameter.text);
         const authorization: string = `PPG ${uuid}:${hash}`
         const requestConfig: AxiosRequestConfig = {
             headers: {
@@ -84,12 +103,12 @@ class Translator {
             'locale': 'en',
             'dict': true,
             'dictDisplay': 30,
-            'honorific': config.honorfic,
+            'honorific': config.honorific,
             'instant': false,
             'paging': false,
-            'source': source,
-            'target': target,
-            'text': text,
+            'source': parameter.source,
+            'target': parameter.target,
+            'text': parameter.text,
             'authroization': authorization,
             'timestamp': time
         });
@@ -98,39 +117,39 @@ class Translator {
             data,
             requestConfig
         );
-        const result: any = (config.verbose ? document : document.translatedText);
+        const result: (string | TranslateResult) = (config.verbose ? document : document.translatedText);
         return result;
     }
     /**
      * 
-     * @param source original language code
-     * @param target target language code
-     * @param content string array to be translated
-     * @param config Config for translation
+     * @returns Translate result
      */
-    public async multiTranslate(source: string = 'detect', target: string, content: string[], config: TranslatorConfig = {
-        honorfic: false,
-        verbose: false
-    }): Promise<string[] | TranslateResult[]> {
-        let result: string[] | TranslateResult[] = [];
-
-        const promises = content.map(async (element, index) => await this.translate(source, target, element, config)
+    public async translate(): Promise<string | TranslateResult | (string | TranslateResult)[]> {
+        if (this.config.multi === true) return this.multiTranslate();
+        const result: (string | TranslateResult) = await this.makeTranslateReq(this.config, this.parameter);
+        return result;
+    }
+    /**
+     * 
+     * @returns translate result list
+     */
+    private async multiTranslate(): Promise<(string | TranslateResult)[]> {
+        const result: string[] | TranslateResult[] = [];
+        const promises = this.multiParam.map(async (element: TranslateParameter, index: number) => await this.makeTranslateReq(this.config, this.multiParam[index])
             .then(res => result[index] = res)
             .catch(error => console.log(error)));
-
         await Promise.all(promises).then(res => res).catch(error => console.log(error));
-
         return result;
     }
     /**
      * 
      * @param text Text to be detected language
      */
-    public async detect(text: string): Promise<string> {
+    static async detect(text: string): Promise<string> {
         const time: number = Date.now();
-        const uuid: string = this.genUUID(time);
+        const uuid: string = this.prototype.genUUID(time);
         const url: string = 'https://papago.naver.com/apis/langs/dect';
-        const hash: string = this.getHash('v1.5.6_97f6918302', `${uuid}\n${url}\n${time}`);
+        const hash: string = this.prototype.getHash('v1.5.6_97f6918302', `${uuid}\n${url}\n${time}`);
 
         const config: AxiosRequestConfig = {
             headers: {
@@ -140,10 +159,10 @@ class Translator {
                 'Timestamp': time
             }
         }
-        const data: string = this.toFormData({
+        const data: string = this.prototype.toFormData({
             'query': text
         });
-        const document: any = await this.request(
+        const document: any = await this.prototype.request(
             url,
             data,
             config
@@ -152,20 +171,39 @@ class Translator {
         return result;
     }
 }
-
-interface TranslatorConfig {
-    // If it is true, returns with raw json
+/**
+ * 
+ * @interface TranslateConfig
+ * @property {TranslateParameter} TranslateConfig.parameter translate parameter
+ * @property {boolean} TranslateConfig.verbose returns at raw json
+ * @property {boolean} TranslateConfig.honorific respectability(Widely used in East Asian languages)
+ * @property {boolean} TranslateConfig.multi multi translate
+ */
+interface TranslateConfig {
+    parameter: (TranslateParameter | TranslateParameter[]);
     verbose?: boolean;
-    // Respectability(Widely used in East Asian languages)
-    honorfic?: boolean;
+    honorific?: boolean;
+    multi?: boolean;
+}
+/**
+ * 
+ * @interface TranslateParameter
+ * @property {string} source original language code
+ * @property {string} target target language code
+ * @property {string} text text to be translated
+ */
+interface TranslateParameter {
+    source?: string;
+    target: string;
+    text: string;
 }
 
 interface TranslateResult {
-    // Origin language code
+    // origin language code
     srcLangType: string;
-    // Targe language code
+    // destination language code
     tarLangType: string;
-    // Translated result
+    // result
     translatedText: string;
     engineType: string;
     pivot: string;
@@ -179,6 +217,7 @@ interface TranslateResult {
 
 export {
     Translator,
-    TranslatorConfig,
-    TranslateResult
+    TranslateConfig,
+    TranslateResult,
+    TranslateParameter
 }
