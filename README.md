@@ -74,7 +74,7 @@ Translator.detect('So far, so bueno!')
 ### Config
 | Property | Detail | Type | Required | default |
 | ---- | ---- | ---- | ---- | ---- |
-| `parameter` | [Translate parameter (list)](#Parameter) | `TranslateParameter | TranslateParameter[]` | Y | `-` |
+| `parameter` | [Translate parameter (list)](#Parameter) | `TranslateParameter \| TranslateParameter[]` | Y | `-` |
 | `honorfic` | Respectability(Widely used in East Asian languages) | `boolean` | N | `false` |
 | `verbose` | If it is true, returns with raw json | `boolean` | N | `false` |
 | `multi` | Multi translation | `boolean` | N | `false` |
