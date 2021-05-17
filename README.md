@@ -21,7 +21,6 @@ import Translator from 'nodepapago';
 
 new Translator({
     parameter: {
-        source: 'en',
         target: 'ko',
         text: 'So far, so good!'
     }
@@ -72,17 +71,17 @@ Translator.detect('So far, so bueno!')
 ```
 ## Table
 ### Config
-| Property | Detail | Type | Required | default |
+| Property | Detail | Type | Required | Default |
 | ---- | ---- | ---- | ---- | ---- |
 | `parameter` | [Translate parameter (list)](#Parameter) | `TranslateParameter \| TranslateParameter[]` | Y | `-` |
 | `honorfic` | Respectability(Widely used in East Asian languages) | `boolean` | N | `false` |
 | `verbose` | If it is true, returns with raw json | `boolean` | N | `false` |
 | `multi` | Multi translation | `boolean` | N | `false` |
 ### Parameter
-| Property | Detail | Type | Required | default |
+| Property | Detail | Type | Required | Default |
 | ---- | ---- | ---- | ---- | ---- |
 | `source` | Oringin language code | `string` | N | `detect` |
-| `target` | Target language code | `string` | Y | `-` |
+| `target` | Destination language code | `string` | Y | `-` |
 | `text` | Text to be translated | `string` | Y | `-` |
 ### Language detect
 | Parameter | Detail | Type | Required |
@@ -111,11 +110,11 @@ Translator.detect('So far, so bueno!')
 | `it` | Italian |
 | `detect` | Auto detect |
 ## Release
-### 2.2.1
+### v2.2.1
 `Changed hashing algorithm`
-### 2.2.4
+### v2.2.4
 `Changed hashing algorithm`
-### 3.0.0
+### v3.0.0
 `Changed all source`
 ## License
 It is following MIT License.

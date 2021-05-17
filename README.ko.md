@@ -16,50 +16,76 @@ npm install nodepapago
 `https://www.npmjs.com/package/nodepapago`
 ## 예시
 ```typescript
-import { Translator } from "nodepapago";
+import Translator from 'nodepapago';
 
-new Translator().translate('detect', 'ko', 'So far, so good!')
+new Translator({
+    parameter: {
+        target: 'ko',
+        text: 'So far, so good!'
+    }
+}).translate()
     .then(res => console.log(res))
     .catch(e => console.log(e));
-// Expected output: '지금까지, 잘했어!'
-
-new Translator().multiTranslate('en', 'ko', ['Morning, sir', 'Morning, ma\'am'], {
-    honorfic: true,
-    verbose: false
-})
+// Expected output: '지금까지, 너무 좋아요!'
+new Translator({
+    parameter: [
+        {
+            source: 'en',
+            target: 'ko',
+            text: 'Morning, sir.'
+        },
+        {
+            source: 'en',
+            target: 'ko',
+            text: 'Morning, ma\'am.'
+        }
+    ],
+    honorific: true
+}).translate()
     .then(res => console.log(res))
     .catch(e => console.log(e));
-// Expected output: ['안녕하세요, 손님.', '안녕하세요, 부인']
-
-new Translator().detect('So far, so bueno!')
+// Expected output: [ '안녕하세요, 선생님.', '안녕하세요, 부인.' ]
+new Translator({
+    parameter: [
+        {
+            source: 'en',
+            target: 'ko',
+            text: 'Morning!'
+        },
+        {
+            source: 'en',
+            target: 'ko',
+            text: 'Morning, baby!'
+        }
+    ],
+    verbose: true
+}).translate()
+    .then(res => console.log(res))
+    .catch(e => console.log(e));
+// Expected output: sooooo long...
+Translator.detect('So far, so bueno!')
     .then(res => console.log(res))
     .catch(e => console.log(e));
 // Expected output: 'it'
 ```
-## 매개변수
-### 일반 번역
-| 매개변수 | 설명 | 타입 | 필수 | 기본 |
+## 표
+### 설정
+| 키 | 설명 | 타입 | 필수 | 기본값 |
+| ---- | ---- | ---- | ---- | ---- |
+| `parameter` | [매개변수 (리스트)]](#매개변수) | `TranslateParameter \| TranslateParameter[]` | Y | `-` |
+| `honorfic` | 높임말 | `boolean` | N | `false` |
+| `verbose` | 결과를 json으로 내보낼 지 결정합니다. | `boolean` | N | `false` |
+| `multi` | 다중 번역 | `boolean` | N | `false` |
+### 매개변수
+| 프로퍼티 | 설명 | 타입 | 필수 | 기본값 |
 | ---- | ---- | ---- | ---- | ---- |
 | `source` | 원본 텍스트 언어 코드 | `string` | N | `detect` |
-| `target` | 번역할 텍스트 언어 코드 | `string` | Y | `-` |
-| `text` | 번역할 텍스트 | `string` | Y | `-` |
-| `config` | 번역 config | `TranslatorConfig` | N | [Config table](#config-table) |
-### 다중 번역
-| 매개변수 | 설명 | 타입 | 필수 | 기본 |
-| ---- | ---- | ---- | ---- | ---- |
-| `source` | 원본 텍스트 언어 코드 | `string` | N | `detect` |
-| `target` | 번역할 텍스트 언어 코드 | `string` | Y | `-` |
-| `contents` | 번역할 텍스트들의 배열 | `Array<string>` | Y | `-` |
-| `config` | 번역 config | `TranslatorConfig` | N | [Config table](#config-table) |
+| `target` | 번역할 텍스트 언어 코드| `string` | Y | `-` |
+| `text` | 번역할 문장 | `string` | Y | `-` |
 ### 언어 감지
 | 매개변수 | 설명 | 타입 | 필수 |
 | ---- | ---- | ---- | ---- |
 | `text` | 언어를 감지할 문장 | `string` | Y |
-### 설정표
-| 키 | 설명 | 타입 | 필수 | 기본 |
-| ---- | ---- | ---- | ---- | ---- |
-| `honorfic` | 높임말 | `boolean` | N | `false` |
-| `verbose` | 결과를 json으로 내보낼 지 결정합니다. | `boolean` | N | `false` |
 ## 언어 코드
 | 코드 | 언어 |
 |----|----|
@@ -83,9 +109,11 @@ new Translator().detect('So far, so bueno!')
 | `it` | 이탈리아어 |
 | `detect` | 자동 감지 |
 ## 변경점
-### 2.2.1
+### v2.2.1
 `해싱 알고리즘 변경`
-### 2.2.4
+### v2.2.4
 `해싱 알고리즘 변경`
+### v3.0.0
+`전체 소스 변경`
 ## 라이선스
 nodepapago는 MIT 라이선스를 따릅니다.
