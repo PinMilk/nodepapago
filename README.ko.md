@@ -118,5 +118,7 @@ Translator.detect('So far, so bueno!')
 `해싱 알고리즘 변경`
 ### v3.0.0
 `전체 소스 변경`
+### v3.0.1
+`해싱 알고리즘 변경`
 ## 라이선스
 nodepapago는 MIT 라이선스를 따릅니다.

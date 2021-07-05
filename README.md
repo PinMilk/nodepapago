@@ -119,5 +119,7 @@ Translator.detect('So far, so bueno!')
 `Changed hashing algorithm`
 ### v3.0.0
 `Changed all source`
+### v3.0.1
+`Changed hashing algorithm`
 ## License
 It is following MIT License.

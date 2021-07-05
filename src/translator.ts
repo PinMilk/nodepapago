@@ -86,7 +86,7 @@ class Translator {
         const time: number = Date.now();
         const uuid: string = this.genUUID(time);
         const url: string = 'https://papago.naver.com/apis/n2mt/translate';
-        const hash: string = this.getHash('v1.5.6_97f6918302', `${uuid}\n${url}\n${time}`);
+        const hash: string = this.getHash('v1.5.9_33e53be80f', `${uuid}\n${url}\n${time}`);
 
         if (parameter.source === void 0 || parameter.source === 'detect') parameter.source = await Translator.detect(parameter.text);
         const authorization: string = `PPG ${uuid}:${hash}`
@@ -149,7 +149,7 @@ class Translator {
         const time: number = Date.now();
         const uuid: string = this.prototype.genUUID(time);
         const url: string = 'https://papago.naver.com/apis/langs/dect';
-        const hash: string = this.prototype.getHash('v1.5.6_97f6918302', `${uuid}\n${url}\n${time}`);
+        const hash: string = this.prototype.getHash('v1.5.9_33e53be80f', `${uuid}\n${url}\n${time}`);
 
         const config: AxiosRequestConfig = {
             headers: {
