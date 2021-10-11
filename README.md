@@ -114,13 +114,13 @@ Translator.detect('So far, so bueno!')
 | `detect` | Auto detect |
 ## Release
 ### v2.2.1
-`Changed hashing algorithm`
+* `Changed hashing algorithm`
 ### v2.2.4
-`Changed hashing algorithm`
+* `Changed hashing algorithm`
 ### v3.0.0
-`Changed all source`
+* `Changed all source`
 ### v3.0.1
-`Changed hashing algorithm`
+* `Changed hashing algorithm`
 ### v3.1.0
 * `Changed hashing algorithm`
 * `Modularized`
