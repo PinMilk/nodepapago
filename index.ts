@@ -4,4 +4,5 @@ export {
     TranslateConfig,
     TranslateResult,
     TranslateParameter
-} from './src/translator';
+} from './src/translator'
+export { LangDetector } from './src/detect_lang'

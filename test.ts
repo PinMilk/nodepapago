@@ -1,4 +1,4 @@
-import Translator from './';
+import Translator from './'
 
 new Translator({
     parameter: {
@@ -8,7 +8,7 @@ new Translator({
     honorific: false
 }).translate()
     .then(res => console.log(res))
-    .catch(e => console.log(e));
+    .catch(e => console.log(e))
 
 new Translator({
     parameter: [
@@ -26,7 +26,7 @@ new Translator({
     honorific: true
 }).translate()
     .then(res => console.log(res))
-    .catch(e => console.log(e));
+    .catch(e => console.log(e))
 
 new Translator({
     parameter: [
@@ -44,8 +44,8 @@ new Translator({
     verbose: true
 }).translate()
     .then(res => console.log(res))
-    .catch(e => console.log(e));
+    .catch(e => console.log(e))
 
 Translator.detect('So far, so bueno!')
     .then(res => console.log(res))
-    .catch(e => console.log(e));
+    .catch(e => console.log(e))

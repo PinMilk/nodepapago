@@ -1,106 +1,60 @@
-import Axios, { AxiosRequestConfig } from 'axios';
-import Crypto from 'crypto';
+import { AxiosRequestConfig } from 'axios'
+import Authenticator from './login/auth'
+import { LangDetector } from './detect_lang'
 
 class Translator {
     private parameter: TranslateParameter = {
         source: 'ko',
         target: 'en',
         text: '안녕'
-    };
-    private multiParam: TranslateParameter[] = [];
-    private config: TranslateConfig;
+    }
+    private multiParam: TranslateParameter[] = []
+    private config: TranslateConfig
+    private HASHING_KEY: string = 'v1.6.3_4f4591fdf3'
+    private C_TYPE: string = 'application/x-www-form-urlencoded; charset=UTF-8'
+    private UA: string = 'Mozilla/5.0 (Macintosh Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36'
     /**
      * 
-     * @param config translate config
+     * @param config 번역 옵션
      * @constructor
      */
     constructor(config: TranslateConfig) {
-        this.config = config;
-        if (config.verbose === void 0) this.config.verbose = false;
-        if (config.honorific === void 0) this.config.honorific = false;
-        if (config.multi === void 0) this.config.multi = false;
+        this.config = config
+        if (config.verbose === void 0) this.config.verbose = false
+        if (config.honorific === void 0) this.config.honorific = false
+        if (config.multi === void 0) this.config.multi = false
         if (Array.isArray(config.parameter)) {
-            this.multiParam = config.parameter;
-            this.config.multi = true;
+            this.multiParam = config.parameter
+            this.config.multi = true
         }
-        else this.parameter = config.parameter;
-        return this;
+        else this.parameter = config.parameter
+        return this
     }
     /**
      * 
-     * Generating UUID
-     * @param time UNIX time(milliseconds)
-     * @private
-     */
-    private genUUID(time: number): string {
-        let tower: number = time;
-        const base: string = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
-        const uuid: string = base.replace(/[xy]/g, e => {
-            const chip: number = (time + 16 * Math.random()) % 16 | 0;
-            tower = Math.floor(tower / 16);
-            return (e === 'x' ? chip : 3 & chip | 8).toString(16);
-        });
-        return uuid;
-    }
-    /**
-     * 
-     * Change form data object to raw data
-     * @param formObj Object to be converted to form data
-     * @private
-     */
-    private toFormData(formObj: any): string {
-        let result: string[] = [];
-        for (let property in formObj) result.push(`${property}=${formObj[property]}`);
-        return result.join('&');
-    }
-    /**
-     * 
-     * Hashing with algorithm that is used by Papago
-     * @param key hashing key
-     * @param message message to be hashed
-     * @private
-     */
-    private getHash(key: string, message: string): string {
-        const hash: Crypto.Hmac = Crypto
-            .createHmac('md5', key)
-            .update(message);
-        return hash.digest('base64');
-    }
-    /**
-     * 
-     * @param url request url
-     * @param data request data
-     * @param config request config
-     * @private
-     */
-    private async request(url: string, data: any, config: AxiosRequestConfig): Promise<any> {
-        return await (await Axios.post(url, data, config)).data;
-    }
-    /**
-     * 
-     * @param config translate config
-     * @param parameter translate parameter
-     * @returns translate result
+     * @param config 번역 옵션
+     * @param parameter 번역 파라미터
+     * @returns 번역 결과
      */
     private async makeTranslateReq(config: TranslateConfig, parameter: TranslateParameter): Promise<string | TranslateResult> {
-        const time: number = Date.now();
-        const uuid: string = this.genUUID(time);
-        const url: string = 'https://papago.naver.com/apis/n2mt/translate';
-        const hash: string = this.getHash('v1.5.9_33e53be80f', `${uuid}\n${url}\n${time}`);
+        const time: number = Date.now()
+        const uuid: string = Authenticator.genUUID(time)
+        const url: string = 'https://papago.naver.com/apis/n2mt/translate'
+        const hash: string = Authenticator.getHash(`${uuid}\n${url}\n${time}`, this.HASHING_KEY)
 
-        if (parameter.source === void 0 || parameter.source === 'detect') parameter.source = await Translator.detect(parameter.text);
+        if (parameter.source === void 0 || parameter.source === 'detect') parameter.source = await new LangDetector(parameter.text).getLangCode()
         const authorization: string = `PPG ${uuid}:${hash}`
         const requestConfig: AxiosRequestConfig = {
             headers: {
                 'Authorization': authorization,
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'Content-Type': this.C_TYPE,
                 'Timestamp': time,
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36'
+                'User-Agent': this.UA
             }
         }
-        const data: string = this.toFormData({
+        const data: string = Authenticator.toFormData({
             'deviceId': uuid,
-            'locale': 'en',
+            'locale': 'ko',
             'dict': true,
             'dictDisplay': 30,
             'honorific': config.honorific,
@@ -111,108 +65,90 @@ class Translator {
             'text': parameter.text,
             'authroization': authorization,
             'timestamp': time
-        });
-        const document: any = await this.request(
+        })
+        const document: any = await Authenticator.request(
             url,
             data,
             requestConfig
-        );
-        const result: (string | TranslateResult) = (config.verbose ? document : document.translatedText);
-        return result;
+        )
+        const result: (string | TranslateResult) = (config.verbose ? document : document.translatedText)
+        return result
     }
     /**
      * 
-     * @returns Translate result
+     * @returns 번역 결과
      */
     public async translate(): Promise<string | TranslateResult | (string | TranslateResult)[]> {
-        if (this.config.multi === true) return this.multiTranslate();
-        const result: (string | TranslateResult) = await this.makeTranslateReq(this.config, this.parameter);
-        return result;
+        if (this.config.multi === true) return this.multiTranslate()
+        const result: (string | TranslateResult) = await this.makeTranslateReq(this.config, this.parameter)
+        return result
     }
     /**
      * 
-     * @returns translate result list
+     * @returns 번역 결과(리스트)
      */
     private async multiTranslate(): Promise<(string | TranslateResult)[]> {
-        const result: string[] | TranslateResult[] = [];
-        const promises = this.multiParam.map(async (element: TranslateParameter, index: number) => await this.makeTranslateReq(this.config, this.multiParam[index])
-            .then(res => result[index] = res)
-            .catch(error => console.log(error)));
-        await Promise.all(promises).then(res => res).catch(error => console.log(error));
-        return result;
+        const result: string[] | TranslateResult[] = []
+        const promises = this.multiParam.map(
+            async (element: TranslateParameter, index: number) =>
+                await this.makeTranslateReq(this.config, this.multiParam[index])
+                    .then(res => result[index] = res)
+                    .catch(error => console.log(error)))
+        await Promise.all(promises).then(res => res)
+            .catch(error => console.log(error))
+        return result
     }
     /**
      * 
-     * @param text Text to be detected language
+     * @param text 언어를 감지할 문장
      */
     static async detect(text: string): Promise<string> {
-        const time: number = Date.now();
-        const uuid: string = this.prototype.genUUID(time);
-        const url: string = 'https://papago.naver.com/apis/langs/dect';
-        const hash: string = this.prototype.getHash('v1.5.9_33e53be80f', `${uuid}\n${url}\n${time}`);
-
-        const config: AxiosRequestConfig = {
-            headers: {
-                'Authorization': `PPG ${uuid}:${hash}`,
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36',
-                'Timestamp': time
-            }
-        }
-        const data: string = this.prototype.toFormData({
-            'query': text
-        });
-        const document: any = await this.prototype.request(
-            url,
-            data,
-            config
-        );
-        const result: string = document.langCode;
-        return result;
+        const langCode: string = await new LangDetector(text).getLangCode()
+        return langCode
     }
 }
 /**
  * 
  * @interface TranslateConfig
- * @property {TranslateParameter} TranslateConfig.parameter translate parameter
- * @property {boolean} TranslateConfig.verbose returns at raw json
- * @property {boolean} TranslateConfig.honorific respectability(Widely used in East Asian languages)
- * @property {boolean} TranslateConfig.multi multi translate
+ * @property {TranslateParameter} TranslateConfig.parameter 번역 파라미터
+ * @property {boolean} TranslateConfig.verbose raw json으로 반환할 지 여부
+ * @property {boolean} TranslateConfig.honorific 경어(동아시아 언어에서 주로 사용)
+ * @property {boolean} TranslateConfig.multi 한 번에 여러 문장을 번역할 지의 여부
  */
 interface TranslateConfig {
-    parameter: (TranslateParameter | TranslateParameter[]);
-    verbose?: boolean;
-    honorific?: boolean;
-    multi?: boolean;
+    parameter: (TranslateParameter | TranslateParameter[])
+    verbose?: boolean
+    honorific?: boolean
+    multi?: boolean
 }
 /**
  * 
  * @interface TranslateParameter
- * @property {string} source original language code
- * @property {string} target target language code
- * @property {string} text text to be translated
+ * @property {string} source 원문 언어 코드
+ * @property {string} target 목적 언어 코드
+ * @property {string} text 번역할 문장
  */
 interface TranslateParameter {
-    source?: string;
-    target: string;
-    text: string;
+    source?: string
+    target: string
+    text: string
 }
 
 interface TranslateResult {
-    // origin language code
-    srcLangType: string;
-    // destination language code
-    tarLangType: string;
-    // result
-    translatedText: string;
-    engineType: string;
-    pivot: string;
-    dict: string;
-    tarDict: string;
-    tlitSrc: string;
-    tlit: string;
-    delay: string;
-    delaySmt: string;
+    // 원문 언어 코드
+    srcLangType: string
+    // 목적 언어 코드
+    tarLangType: string
+    // 결과
+    translatedText: string
+    engineType: string
+    pivot: string
+    dict: string
+    tarDict: string
+    tlitSrc: string
+    tlit: string
+    delay: string
+    delaySmt: string
 }
 
 export {
