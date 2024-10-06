@@ -1,6 +1,6 @@
 {
   "name": "nodepapago",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "Papago translator(Unofficial)",
   "main": "./index.js",
   "contributors": [
@@ -28,14 +28,14 @@
     "url": "https://github.com/PinMIlk/nodepapago/issues"
   },
   "dependencies": {
-    "axios": "^0.21.4",
+    "axios": "^1.7.7",
     "uuid": "^8.3.2"
   },
   "homepage": "https://github.com/PinMIlk/nodepapago#readme",
   "devDependencies": {
-    "@types/node": "^16.11.56",
+    "@types/node": "^16.18.112",
     "@types/uuid": "^8.3.4",
-    "ts-node": "^10.2.1",
-    "typescript": "^4.4.3"
+    "ts-node": "^10.9.2",
+    "typescript": "^4.9.5"
   }
 }
