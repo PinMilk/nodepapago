@@ -1,7 +1,6 @@
 import { AxiosRequestConfig } from 'axios'
 import Authenticator from './login/auth'
 import { LangDetector } from './detect_lang'
-import { v4 as UUIDV4 } from 'uuid'
 
 class Translator {
     private parameter: TranslateParameter = {
@@ -11,9 +10,8 @@ class Translator {
     }
     private multiParam: TranslateParameter[] = []
     private config: TranslateConfig
-    private HASHING_KEY: string = 'v1.8.5_f89009cc84'                                                                                                 // Hashing 시 사용하는 Key, main.xxxxx File 내에서 authorization으로 찾을 수 있음
     private C_TYPE: string = 'application/x-www-form-urlencoded; charset=UTF-8'                                                                       // Content-Type
-    private UA: string = 'Mozilla/5.0 (Macintosh Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36'     // User-Agent
+    private UA: string = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.0.1 Safari/605.1.15'     // User-Agent
     /**
      * 
      * @param config 번역 옵션
@@ -38,40 +36,41 @@ class Translator {
      * @returns 번역 결과
      */
     private async makeTranslateReq(config: TranslateConfig, parameter: TranslateParameter): Promise<string | TranslateResult> {
-        const time: number = Date.now()                                                                                                                  // Timestamp 생성
-        const uuid: string = UUIDV4()                                                                                                                    // UUID 생성
-        const url: string = 'https://papago.naver.com/apis/n2mt/translate'                                                                               // 요청 URL
-        const hash: string = Authenticator.getHash(`${uuid}\n${url}\n${time}`, this.HASHING_KEY)                                                         // Authorization Header Hash 생성
-
-        if (parameter.source === void 0 || parameter.source === 'detect') parameter.source = await new LangDetector(parameter.text).getLangCode()        // Language Code를 확인 후, 없을 시 언어감지
-        const authorization: string = `PPG ${uuid}:${hash}`                                                                                              // Authorization Header 생성
+        const url: string = 'https://papago.naver.com/api/text/translation'
+        const source: string = parameter.source === void 0 || parameter.source === 'detect'
+            ? await new LangDetector(parameter.text).getLangCode()
+            : parameter.source
+        const toApiLangCode = (code: string): string => {
+            switch (code.toLowerCase()) {
+                case 'zh-cn': return 'zh-CN'
+                case 'zh-tw': return 'zh-TW'
+                default: return code
+            }
+        }
         const requestConfig: AxiosRequestConfig = {
             headers: {
-                'Authorization': authorization,
                 'Content-Type': this.C_TYPE,
-                'Timestamp': time,
+                'Accept-Language': 'ko',
                 'User-Agent': this.UA
             }
         }
-        const data: string = Authenticator.toFormData({
-            'deviceId': uuid,
-            'locale': 'ko',
-            'dict': true,
-            'dictDisplay': 30,
-            'honorific': config.honorific,
-            'instant': false,
-            'paging': false,
-            'source': parameter.source,
-            'target': parameter.target,
+        const data: string = new URLSearchParams({
+            'dict': 'true',
+            'dictDisplay': '30',
+            'honorific': String(config.honorific === true),
+            'useGlossary': 'false',
+            'source': toApiLangCode(source),
+            'target': toApiLangCode(parameter.target),
             'text': parameter.text,
-            'authroization': authorization,
-            'timestamp': time
-        })
+        }).toString()
         const document: any = await Authenticator.request(
             url,
             data,
             requestConfig
         )
+        if (!document || typeof document.translatedText !== 'string') {
+            throw new Error('Papago returned an invalid translation response')
+        }
         const result: (string | TranslateResult) = (config.verbose ? document : document.translatedText)
         return result
     }
@@ -89,15 +88,7 @@ class Translator {
      * @returns 번역 결과(리스트)
      */
     private async multiTranslate(): Promise<(string | TranslateResult)[]> {
-        const result: string[] | TranslateResult[] = []
-        const promises = this.multiParam.map(
-            async (_element: TranslateParameter, index: number) =>
-                await this.makeTranslateReq(this.config, this.multiParam[index])
-                    .then(res => result[index] = res)
-                    .catch(error => console.log(error)))
-        await Promise.all(promises).then(res => res)
-            .catch(error => console.log(error))
-        return result
+        return Promise.all(this.multiParam.map(parameter => this.makeTranslateReq(this.config, parameter)))
     }
     /**
      * 
@@ -141,13 +132,13 @@ interface TranslateResult {
     // 결과
     translatedText: string
     engineType: string
-    pivot: string
-    dict: string
-    tarDict: string
-    tlitSrc: string
-    tlit: string
-    delay: string
-    delaySmt: string
+    pivot?: string
+    dict?: Record<string, unknown>
+    tarDict?: Record<string, unknown>
+    tlitSrc?: Record<string, unknown>
+    tlit?: Record<string, unknown>
+    delay: number
+    delaySmt: number
 }
 
 export {

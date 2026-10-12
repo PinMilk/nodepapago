@@ -5,6 +5,7 @@
 - Note: It can stop working anytime.
 - 전달: 이 프로그램은 언제라도 작동을 멈출 수 있습니다.
 - [English](./README.en.md)
+- [日本語](./README.JA.md)
 
 [![NPM](https://nodei.co/npm/nodepapago.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/nodepapago/)
 ## 설치
@@ -16,6 +17,8 @@ npm install nodepapago
 ## npm
 `https://www.npmjs.com/package/nodepapago`
 ## 예시
+파파고의 번역 모델에 따라 실제 번역 문구는 아래 예상 결과와 달라질 수 있습니다.
+
 ```typescript
 import Translator from 'nodepapago';
 
@@ -70,14 +73,14 @@ new Translator({
 Translator.detect('So far, so bueno!')
     .then(res => console.log(res))
     .catch(e => console.log(e));
-// Expected output: 'it'
+// Expected output: 'en' (파파고의 언어 감지 결과는 변경될 수 있습니다.)
 ```
 ## 표
 ### 설정
 | 키 | 설명 | 타입 | 필수 | 기본값 |
 | ---- | ---- | ---- | ---- | ---- |
 | `parameter` | [매개변수 (리스트)](#매개변수) | `TranslateParameter \| TranslateParameter[]` | Y | `-` |
-| `honorfic` | 높임말 | `boolean` | N | `false` |
+| `honorific` | 높임말 | `boolean` | N | `false` |
 | `verbose` | 결과를 json으로 내보낼 지 결정합니다. | `boolean` | N | `false` |
 | `multi` | 다중 번역 | `boolean` | N | `false` |
 ### 매개변수
@@ -112,6 +115,13 @@ Translator.detect('So far, so bueno!')
 | `ru` | 러시아어 |
 | `it` | 이탈리아어 |
 | `detect` | 자동 감지 |
+## 로컬 빌드 및 번역 테스트
+```bash
+npx tsc
+node test.js
+```
+다중 번역 중 요청이 실패하면 `translate()`가 reject되므로 `.catch()`에서 처리할 수 있습니다.
+
 ## 변경점
 ### v2.2.1
 * `해싱 알고리즘 변경`
@@ -128,5 +138,7 @@ Translator.detect('So far, so bueno!')
 * `UUID 생성 부분 변경(기존 Papago 방식 → UUID Module 사용)`
 * `약간의 경량화`
 * `README.md File 기본 언어를 한국어로 변경`
+### v3.2.0
+* `해싱 알고리즘 변경`
 ## 라이선스
 nodepapago는 MIT 라이선스를 따릅니다.

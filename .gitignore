@@ -1,3 +1,4 @@
 *.js
 !crypto.js
+!tests/translator.js
 node_modules/

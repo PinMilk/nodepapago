@@ -14,7 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/PinMIlk/nodepapago.git"
   },
-  "author": "PinMilk <hanbyeul04@kakao.com> (https://github.com/PinMIlk)",
+  "author": "PinMilk <hanbyeul04@kakao.com> (https://github.com/PinMilk)",
   "keywords": [
     "papago",
     "translator",
@@ -29,11 +29,11 @@
   },
   "dependencies": {
     "axios": "^1.7.7",
-    "uuid": "^8.3.2"
+    "uuid": "^14.0.2"
   },
   "homepage": "https://github.com/PinMIlk/nodepapago#readme",
   "devDependencies": {
-    "@types/node": "^16.18.112",
+    "@types/node": "^16.18.126",
     "@types/uuid": "^8.3.4",
     "ts-node": "^10.9.2",
     "typescript": "^4.9.5"
