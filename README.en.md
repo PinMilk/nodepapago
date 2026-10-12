@@ -6,7 +6,7 @@
 - [한국어](./README.md)
 - [日本語](./README.JA.md)
 
-[![NPM](https://nodei.co/npm/nodepapago.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/nodepapago/)
+[![NPM](https://nodei.co/npm/nodepapago.svg)](https://nodei.co/npm/nodepapago/)
 
 ## Installation
 ```
