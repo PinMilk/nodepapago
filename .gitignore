@@ -1,4 +1,26 @@
-*.js
-!crypto.js
-!tests/translator.js
+# npm으로 설치한 의존성은 제외합니다. package.json과 package-lock.json은 추적합니다.
 node_modules/
+
+# TypeScript가 소스 옆에 생성하는 JavaScript와 소스 맵, 증분 빌드 캐시
+*.js
+*.js.map
+*.tsbuildinfo
+
+# 테스트 커버리지와 도구 캐시 (소스 코드나 테스트 파일 자체는 제외하지 않습니다.)
+/coverage/
+/.nyc_output/
+/.cache/
+
+# npm 및 프로그램 실행 중 생성되는 로그
+*.log
+
+# 개인 환경 변수와 npm 인증 설정은 저장소에 올리지 않습니다.
+# 비밀값이 없는 예제 환경 설정 파일은 공유할 수 있습니다.
+.env
+.env.*
+!.env.example
+!.env.*.example
+.npmrc
+
+# macOS Finder가 자동 생성하는 폴더 메타데이터
+.DS_Store
